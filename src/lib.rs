@@ -1,5 +1,6 @@
 mod abi;
 mod pb;
+mod rpc;
 use hex_literal::hex;
 use pb::contract::v1 as contract;
 use substreams::prelude::*;
@@ -322,6 +323,17 @@ fn map_lendergroup_events(
                 .filter(|log| is_declared_dds_address(&log.address, log.ordinal, dds_store))
                 .filter_map(|log| {
                     if let Some(event) = abi::lendergroup_contract::events::PoolInitialized::match_and_decode(log) {
+                        
+                        // do RPC stuff here 
+
+
+                       let lender_group_contract_address = Hex(&log.address).to_string();
+
+                        let fetched_rpc_data = rpc::fetch_lender_group_pool_initialization_data_from_rpc(
+                            &lender_group_contract_address
+                             ).unwrap();
+
+                        
                         return Some(contract::LendergroupPoolInitialized {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
@@ -339,6 +351,10 @@ fn map_lendergroup_events(
                             principal_token_address: event.principal_token_address,
                             twap_interval: event.twap_interval.to_u64(),
                             uniswap_pool_fee: event.uniswap_pool_fee.to_u64(),
+
+                            teller_v2_address: fetched_rpc_data.teller_v2_address.to_fixed_bytes().to_vec(),
+                            uniswap_v3_pool_address: fetched_rpc_data.uniswap_v3_pool_address.to_fixed_bytes().to_vec(),
+                            smart_commitment_forwarder_address: fetched_rpc_data.smart_commitment_forwarder_address.to_fixed_bytes().to_vec(),
                         });
                     }
 

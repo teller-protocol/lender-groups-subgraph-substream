@@ -21,6 +21,14 @@
 
 ### Building 
 
+> run proto gen (to output RUST ) 
+
+
+```
+substreams protogen 
+```
+
+
 
 > Create a substreams spkg 
 
