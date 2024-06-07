@@ -6,7 +6,13 @@ pub mod contract {
         // @@protoc_insertion_point(contract.v1)
     }
 }
- 
+pub mod google {
+    // @@protoc_insertion_point(attribute:google.protobuf)
+    pub mod protobuf {
+        include!("google.protobuf.rs");
+        // @@protoc_insertion_point(google.protobuf)
+    }
+}
 pub mod sf {
     // @@protoc_insertion_point(attribute:sf.substreams)
     pub mod substreams {
