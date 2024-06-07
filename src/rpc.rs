@@ -10,6 +10,14 @@ use substreams::Hex;
 use substreams_ethereum::rpc::RpcBatch;
 
 
+/*
+
+Example 
+
+https://github.com/streamingfast/substreams-uniswap-v3/blob/develop/src/rpc.rs
+
+
+*/
 
 pub struct LenderGroupPoolInitializationDataFromRpc {
         
@@ -41,17 +49,13 @@ pub fn fetch_lender_group_pool_initialization_data_from_rpc(pool_contract_addres
         
     
             
-            let smart_commitment_forwarder_function = abi::lendergroup_contract::functions::SmartCommitmentForwarder {};
-            let Some(smart_commitment_forwarder_address) = smart_commitment_forwarder_function.call(
-                pool_contract_address_decoded.clone()
-             ) else {return None};
+        let smart_commitment_forwarder_function = abi::lendergroup_contract::functions::SmartCommitmentForwarder {};
+        let Some(smart_commitment_forwarder_address) = smart_commitment_forwarder_function.call(
+              pool_contract_address_decoded.clone()
+         ) else {return None};
             
             
-    
-    
- 
-    
-    
+     
     
     return Some(  
         LenderGroupPoolInitializationDataFromRpc{ 

@@ -33,7 +33,7 @@ fn map_factory_events(blk: &eth::Block, events: &mut contract::Events) {
                         return Some(contract::FactoryAdminChanged {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             new_admin: event.new_admin,
                             previous_admin: event.previous_admin,
@@ -54,7 +54,7 @@ fn map_factory_events(blk: &eth::Block, events: &mut contract::Events) {
                         return Some(contract::FactoryBeaconUpgraded {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             beacon: event.beacon,
                         });
@@ -74,7 +74,7 @@ fn map_factory_events(blk: &eth::Block, events: &mut contract::Events) {
                         return Some(contract::FactoryDeployedLenderGroupContract {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             group_contract: event.group_contract,
                         });
@@ -94,7 +94,7 @@ fn map_factory_events(blk: &eth::Block, events: &mut contract::Events) {
                         return Some(contract::FactoryUpgraded {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             implementation: event.implementation,
                         });
@@ -130,7 +130,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupBorrowerAcceptedFunds {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             bid_id: event.bid_id.to_string(),
@@ -157,7 +157,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupDefaultedLoanLiquidated {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             amount_due: event.amount_due.to_string(),
@@ -182,7 +182,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupEarningsWithdrawn {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             amount_pool_shares_tokens: event.amount_pool_shares_tokens.to_string(),
@@ -207,7 +207,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupInitialized {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             version: event.version.to_u64(),
@@ -229,7 +229,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupLenderAddedPrincipal {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             amount: event.amount.to_string(),
@@ -254,7 +254,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupLoanRepaid {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             bid_id: event.bid_id.to_string(),
@@ -281,7 +281,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupOwnershipTransferred {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             new_owner: event.new_owner,
@@ -304,7 +304,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupPaused {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             account: event.account,
@@ -324,9 +324,7 @@ fn map_lendergroup_events(
                 .filter_map(|log| {
                     if let Some(event) = abi::lendergroup_contract::events::PoolInitialized::match_and_decode(log) {
                         
-                        // do RPC stuff here 
-
-
+                        
                        let lender_group_contract_address = Hex(&log.address).to_string();
 
                         let fetched_rpc_data = rpc::fetch_lender_group_pool_initialization_data_from_rpc(
@@ -337,7 +335,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupPoolInitialized {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             collateral_token_address: event.collateral_token_address,
@@ -373,7 +371,7 @@ fn map_lendergroup_events(
                         return Some(contract::LendergroupUnpaused {
                             evt_tx_hash: Hex(&view.transaction.hash).to_string(),
                             evt_index: log.block_index,
-                            evt_block_time: Some(blk.timestamp().to_owned()),
+                            evt_block_time: blk.timestamp_seconds(),
                             evt_block_number: blk.number,
                             evt_address: Hex(&log.address).to_string(),
                             account: event.account,
@@ -392,7 +390,7 @@ fn db_factory_out(events: &contract::Events, tables: &mut DatabaseChangeTables) 
     events.factory_admin_changeds.iter().for_each(|evt| {
         tables
             .create_row("factory_admin_changed", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time )
             .set("evt_block_number", evt.evt_block_number)
             .set("new_admin", Hex(&evt.new_admin).to_string())
             .set("previous_admin", Hex(&evt.previous_admin).to_string());
@@ -400,21 +398,21 @@ fn db_factory_out(events: &contract::Events, tables: &mut DatabaseChangeTables) 
     events.factory_beacon_upgradeds.iter().for_each(|evt| {
         tables
             .create_row("factory_beacon_upgraded", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("beacon", Hex(&evt.beacon).to_string());
     });
     events.factory_deployed_lender_group_contracts.iter().for_each(|evt| {
         tables
             .create_row("factory_deployed_lender_group_contract", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("group_contract", Hex(&evt.group_contract).to_string());
     });
     events.factory_upgradeds.iter().for_each(|evt| {
         tables
             .create_row("factory_upgraded", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("implementation", Hex(&evt.implementation).to_string());
     });
@@ -424,7 +422,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_borrower_accepted_funds.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_borrower_accepted_funds", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("bid_id", BigDecimal::from_str(&evt.bid_id).unwrap())
@@ -437,7 +435,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_defaulted_loan_liquidateds.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_defaulted_loan_liquidated", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("amount_due", BigDecimal::from_str(&evt.amount_due).unwrap())
@@ -448,7 +446,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_earnings_withdrawns.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_earnings_withdrawn", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("amount_pool_shares_tokens", BigDecimal::from_str(&evt.amount_pool_shares_tokens).unwrap())
@@ -459,7 +457,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_initializeds.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_initialized", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("version", evt.version);
@@ -467,7 +465,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_lender_added_principals.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_lender_added_principal", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("amount", BigDecimal::from_str(&evt.amount).unwrap())
@@ -478,7 +476,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_loan_repaids.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_loan_repaid", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("bid_id", BigDecimal::from_str(&evt.bid_id).unwrap())
@@ -491,7 +489,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_ownership_transferreds.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_ownership_transferred", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("new_owner", Hex(&evt.new_owner).to_string())
@@ -500,7 +498,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_pauseds.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_paused", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("account", Hex(&evt.account).to_string());
@@ -508,7 +506,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_pool_initializeds.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_pool_initialized", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("collateral_token_address", Hex(&evt.collateral_token_address).to_string())
@@ -526,7 +524,7 @@ fn db_lendergroup_out(events: &contract::Events, tables: &mut DatabaseChangeTabl
     events.lendergroup_unpauseds.iter().for_each(|evt| {
         tables
             .create_row("lendergroup_unpaused", [("evt_tx_hash", evt.evt_tx_hash.to_string()),("evt_index", evt.evt_index.to_string())])
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("account", Hex(&evt.account).to_string());
@@ -541,7 +539,7 @@ fn graph_factory_out(events: &contract::Events, tables: &mut EntityChangesTables
             .create_row("factory_admin_changed", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("new_admin", Hex(&evt.new_admin).to_string())
             .set("previous_admin", Hex(&evt.previous_admin).to_string());
@@ -551,7 +549,7 @@ fn graph_factory_out(events: &contract::Events, tables: &mut EntityChangesTables
             .create_row("factory_beacon_upgraded", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("beacon", Hex(&evt.beacon).to_string());
     });
@@ -560,7 +558,7 @@ fn graph_factory_out(events: &contract::Events, tables: &mut EntityChangesTables
             .create_row("factory_deployed_lender_group_contract", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("group_contract", Hex(&evt.group_contract).to_string());
     });
@@ -569,7 +567,7 @@ fn graph_factory_out(events: &contract::Events, tables: &mut EntityChangesTables
             .create_row("factory_upgraded", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("implementation", Hex(&evt.implementation).to_string());
     });
@@ -581,7 +579,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_borrower_accepted_funds", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("bid_id", BigDecimal::from_str(&evt.bid_id).unwrap())
@@ -596,7 +594,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_defaulted_loan_liquidated", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("amount_due", BigDecimal::from_str(&evt.amount_due).unwrap())
@@ -609,7 +607,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_earnings_withdrawn", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("amount_pool_shares_tokens", BigDecimal::from_str(&evt.amount_pool_shares_tokens).unwrap())
@@ -622,7 +620,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_initialized", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("version", evt.version);
@@ -632,7 +630,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_lender_added_principal", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("amount", BigDecimal::from_str(&evt.amount).unwrap())
@@ -645,7 +643,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_loan_repaid", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("bid_id", BigDecimal::from_str(&evt.bid_id).unwrap())
@@ -660,7 +658,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_ownership_transferred", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("new_owner", Hex(&evt.new_owner).to_string())
@@ -671,7 +669,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_paused", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("account", Hex(&evt.account).to_string());
@@ -681,7 +679,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_pool_initialized", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("collateral_token_address", Hex(&evt.collateral_token_address).to_string())
@@ -701,7 +699,7 @@ fn graph_lendergroup_out(events: &contract::Events, tables: &mut EntityChangesTa
             .create_row("lendergroup_unpaused", format!("{}-{}", evt.evt_tx_hash, evt.evt_index))
             .set("evt_tx_hash", &evt.evt_tx_hash)
             .set("evt_index", evt.evt_index)
-            .set("evt_block_time", evt.evt_block_time.as_ref().unwrap())
+            .set("evt_block_time", evt.evt_block_time)
             .set("evt_block_number", evt.evt_block_number)
             .set("evt_address", &evt.evt_address)
             .set("account", Hex(&evt.account).to_string());
