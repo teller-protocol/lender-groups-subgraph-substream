@@ -1,13 +1,12 @@
 specVersion: 0.0.6
 description: lender-group-substream substreams based subgraph
-repository: # fill in with git remote url
+repository: null
 schema:
-  file: ./schema.graphql
-
+  file: schema.graphql
 dataSources:
   - kind: substreams
     name: lender-group-substream
-    network: mainnet
+    network: matic
     source:
       package:
         moduleName: graph_out
